@@ -1,7 +1,7 @@
 # Puppet module for Corosync & Pacemaker
 
 [![License](https://img.shields.io/github/license/voxpupuli/puppet-corosync.svg)](https://github.com/voxpupuli/puppet-corosync/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-corosync.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-corosync)
+![Build Status](https://github.com/voxpupuli/puppet-corosync/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Code Coverage](https://coveralls.io/repos/github/voxpupuli/puppet-corosync/badge.svg?branch=master)](https://coveralls.io/github/voxpupuli/puppet-corosync)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/corosync.svg)](https://forge.puppetlabs.com/puppet/corosync)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/corosync.svg)](https://forge.puppetlabs.com/puppet/corosync)
