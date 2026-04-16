@@ -38,7 +38,7 @@ Puppet::Type.type(:cs_property).provide(:pcs, parent: PuppetX::Voxpupuli::Corosy
         name: property[:name],
         ensure: :present,
         value: property[:value],
-        provider: name
+        provider: name,
       }
       instances << new(property_instance)
     end
@@ -51,14 +51,14 @@ Puppet::Type.type(:cs_property).provide(:pcs, parent: PuppetX::Voxpupuli::Corosy
     @property_hash = {
       name: @resource[:name],
       ensure: :present,
-      value: @resource[:value]
+      value: @resource[:value],
     }
   end
 
   # Unlike create we actually immediately delete the item.
   def destroy
     debug('Removing cluster property')
-    cmd = [command(:pcs), 'property', 'unset', (@property_hash[:name]).to_s]
+    cmd = [command(:pcs), 'property', 'unset', @property_hash[:name].to_s]
     self.class.run_command_in_cib(cmd, @resource[:cib])
     @property_hash.clear
   end

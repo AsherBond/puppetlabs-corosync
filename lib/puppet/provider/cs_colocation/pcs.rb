@@ -55,7 +55,7 @@ Puppet::Type.type(:cs_colocation).provide(:pcs, parent: PuppetX::Voxpupuli::Coro
           primitives: resource_sets,
           score: items['score'],
           provider: name,
-          new: false
+          new: false,
         }
       else
         rsc = if items['rsc-role'] && items['rsc-role'] != 'Started'
@@ -82,7 +82,7 @@ Puppet::Type.type(:cs_colocation).provide(:pcs, parent: PuppetX::Voxpupuli::Coro
           primitives: [with_rsc, rsc],
           score: items['score'],
           provider: name,
-          new: false
+          new: false,
         }
       end
       instances << new(colocation_instance)
@@ -98,7 +98,7 @@ Puppet::Type.type(:cs_colocation).provide(:pcs, parent: PuppetX::Voxpupuli::Coro
       ensure: :present,
       primitives: @resource[:primitives],
       score: @resource[:score],
-      new: true
+      new: true,
     }
   end
 

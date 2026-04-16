@@ -39,7 +39,7 @@ Puppet::Type.type(:cs_property).provide(:crm, parent: PuppetX::Voxpupuli::Corosy
         name: property[:name],
         ensure: :present,
         value: property[:value],
-        provider: name
+        provider: name,
       }
       instances << new(property_instance)
     end
@@ -52,7 +52,7 @@ Puppet::Type.type(:cs_property).provide(:crm, parent: PuppetX::Voxpupuli::Corosy
     @property_hash = {
       name: @resource[:name],
       ensure: :present,
-      value: @resource[:value]
+      value: @resource[:value],
     }
   end
 

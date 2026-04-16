@@ -38,7 +38,7 @@ Puppet::Type.type(:cs_rsc_defaults).provide(:crm, parent: PuppetX::Voxpupuli::Co
         name: rsc_defaults[:name],
         ensure: :present,
         value: rsc_defaults[:value],
-        provider: name
+        provider: name,
       }
       instances << new(rsc_defaults_instance)
     end
@@ -51,7 +51,7 @@ Puppet::Type.type(:cs_rsc_defaults).provide(:crm, parent: PuppetX::Voxpupuli::Co
     @property_hash = {
       name: @resource[:name],
       ensure: :present,
-      value: @resource[:value]
+      value: @resource[:value],
     }
   end
 

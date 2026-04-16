@@ -21,7 +21,7 @@ describe Puppet::Type.type(:cs_colocation).provider(:crm) do
 
   let :instances do
     allow(Puppet::Util::Execution).to receive(:execute).and_return(
-      Puppet::Util::Execution::ProcessOutput.new(test_cib, 0)
+      Puppet::Util::Execution::ProcessOutput.new(test_cib, 0),
     )
     described_class.instances
   end
@@ -74,7 +74,7 @@ describe Puppet::Type.type(:cs_colocation).provider(:crm) do
           expect(File.read(args[3])).to match(pattern) if args.slice(0..2) == %w[configure load update]
           true
         end.and_return(
-          Puppet::Util::Execution::ProcessOutput.new('', 0)
+          Puppet::Util::Execution::ProcessOutput.new('', 0),
         )
       end
     end
@@ -85,7 +85,7 @@ describe Puppet::Type.type(:cs_colocation).provider(:crm) do
           name: 'first_with_second',
           provider: :crm,
           primitives: %w[first second],
-          ensure: :present
+          ensure: :present,
         )
       end
 
@@ -131,7 +131,7 @@ describe Puppet::Type.type(:cs_colocation).provider(:crm) do
           name: 'first_with_second_with_third',
           provider: :crm,
           primitives: %w[first second third],
-          ensure: :present
+          ensure: :present,
         )
       end
 

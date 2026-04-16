@@ -52,7 +52,7 @@ describe Puppet::Type.type(:cs_group).provider(:crm) do
 
     allow(described_class).to receive(:block_until_ready).and_return(nil)
     allow(Puppet::Util::Execution).to receive(:execute).and_return(
-      Puppet::Util::Execution::ProcessOutput.new(cib, 0)
+      Puppet::Util::Execution::ProcessOutput.new(cib, 0),
     )
     described_class.instances
   end

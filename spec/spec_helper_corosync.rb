@@ -30,7 +30,7 @@ def expect_commands(patterns)
       cmdline = args[0].join(' ')
       pattern.match(cmdline)
     end.and_return(
-      Puppet::Util::Execution::ProcessOutput.new('', 0)
+      Puppet::Util::Execution::ProcessOutput.new('', 0),
     )
   end
 end
@@ -54,7 +54,7 @@ end
 
 def pcs_load_cib(cib)
   allow(Puppet::Util::Execution).to receive(:execute).and_return(
-    Puppet::Util::Execution::ProcessOutput.new(cib, 0)
+    Puppet::Util::Execution::ProcessOutput.new(cib, 0),
   )
 end
 
@@ -62,7 +62,7 @@ def create_cs_location_resource(primitive)
   cs_location_class = Puppet::Type.type(:cs_location)
   cs_location_class.new(
     name: "#{primitive}_location",
-    primitive: primitive
+    primitive: primitive,
   )
 end
 
@@ -71,7 +71,7 @@ def create_cs_location_resource_with_cib(primitive, cib)
   cs_location_class.new(
     name: "#{primitive}_location",
     primitive: primitive,
-    cib: cib
+    cib: cib,
   )
 end
 
@@ -79,7 +79,7 @@ def create_cs_group_resource(name, primitives)
   cs_group_class = Puppet::Type.type(:cs_group)
   cs_group_class.new(
     name: name,
-    primitives: primitives
+    primitives: primitives,
   )
 end
 
@@ -88,7 +88,7 @@ def create_cs_group_resource_with_cib(name, primitives, cib)
   cs_group_class.new(
     name: name,
     primitives: primitives,
-    cib: cib
+    cib: cib,
   )
 end
 
@@ -96,7 +96,7 @@ def create_cs_clone_resource(primitive)
   cs_clone_class = Puppet::Type.type(:cs_clone)
   cs_clone_class.new(
     name: "#{primitive}_clone",
-    primitive: primitive
+    primitive: primitive,
   )
 end
 
@@ -104,7 +104,7 @@ def create_cs_clone_resource_with_group(group)
   cs_clone_class = Puppet::Type.type(:cs_clone)
   cs_clone_class.new(
     name: "#{group}_clone",
-    group: group
+    group: group,
   )
 end
 
@@ -113,28 +113,28 @@ def create_cs_clone_resource_with_cib(primitive, cib)
   cs_clone_class.new(
     name: "#{primitive}_clone",
     primitive: primitive,
-    cib: cib
+    cib: cib,
   )
 end
 
 def create_cs_primitive_resource(primitive)
   cs_primitive_class = Puppet::Type.type(:cs_primitive)
   cs_primitive_class.new(
-    name: primitive
+    name: primitive,
   )
 end
 
 def create_cs_shadow_resource(cib)
   cs_shadow_class = Puppet::Type.type(:cs_shadow)
   cs_shadow_class.new(
-    name: cib
+    name: cib,
   )
 end
 
 def create_service_resource(name)
   cs_shadow_class = Puppet::Type.type(:service)
   cs_shadow_class.new(
-    name: name
+    name: name,
   )
 end
 

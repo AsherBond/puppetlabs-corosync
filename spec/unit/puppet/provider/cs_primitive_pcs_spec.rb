@@ -61,7 +61,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
       it 'has an operations property corresponding to <operations>' do
         expect(instance.operations).to eq([
                                             { 'start' => { 'interval' => '0', 'timeout' => '60' } },
-                                            { 'stop'  => { 'interval' => '0', 'timeout' => '40' } }
+                                            { 'stop'  => { 'interval' => '0', 'timeout' => '40' } },
                                           ])
       end
 
@@ -136,7 +136,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
         primitive_class: 'ocf',
         provided_by: 'heartbeat',
         operations: { 'monitor' => { 'interval' => '60s' } },
-        primitive_type: 'IPaddr2'
+        primitive_type: 'IPaddr2',
       )
     end
 
@@ -146,7 +146,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
         provider: :pcs,
         primitive_class: 'stonith',
         operations: { 'monitor' => { 'interval' => '60s' } },
-        primitive_type: 'fence_lpar'
+        primitive_type: 'fence_lpar',
       )
     end
 
@@ -223,12 +223,12 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
     it 'update operations without changing operations that are already there' do
       vip_op_instance.operations = [
         { 'monitor' => { 'interval' => '20s' } },
-        { 'monitor2' => { 'interval' => '20s' } }
+        { 'monitor2' => { 'interval' => '20s' } },
       ]
       expect_commands([
                         %r{^pcs resource op remove example_vip_with_op monitor interval=10s$},
                         %r{^pcs resource op remove example_vip_with_op monitor3 interval=30s$},
-                        %r{^pcs resource update example_vip_with_op cidr_netmask=24 ip=172.31.110.68 op monitor interval=20s op monitor2 interval=20s}
+                        %r{^pcs resource update example_vip_with_op cidr_netmask=24 ip=172.31.110.68 op monitor interval=20s op monitor2 interval=20s},
                       ])
       vip_op_instance.flush
     end
@@ -303,7 +303,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
         'login' => 'service-fence',
         'managed' => 'power-cec0',
         'pcmk_delay_max' => '10s',
-        'pcmk_host_map' => 'app01.example.org:app01'
+        'pcmk_host_map' => 'app01.example.org:app01',
       }
       expect_commands(%r{^pcs stonith create --force testStonith fence_lpar ipaddr=hmc00[.]example[.]org login=service-fence managed=power-cec0 pcmk_delay_max=10s pcmk_host_map=app01[.]example[.]org:app01 op.*})
       stonith_instance.flush
@@ -334,7 +334,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
         'ssl' => '1',
         'ssl_insecure' => '1',
         'pcmk_host_map' => 'nfs00.example.org:nfs00;nfs01.example.org:nfs01',
-        'pcmk_delay_max' => '10s'
+        'pcmk_delay_max' => '10s',
       }
       expect_commands(%r{^pcs stonith update vmfence ipaddr=vcenter01[.]example[.]org login=service-fence_vmware_soap@vsphere[.]local passwd=some-secret ssl=1 ssl_insecure=1 pcmk_host_map=nfs00[.]example[.]org:nfs00;nfs01[.]example[.]org:nfs01 pcmk_delay_max=10s$})
       vmfence_instance.flush
@@ -344,7 +344,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
       vmfence_instance.primitive_type = 'fence_vmware_rest'
       expect_commands([
                         %r{^pcs stonith delete --force vmfence$},
-                        %r{^pcs stonith create --force vmfence fence_vmware_rest}
+                        %r{^pcs stonith create --force vmfence fence_vmware_rest},
                       ])
       vmfence_instance.flush
     end
@@ -354,7 +354,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
       vmfence_instance.primitive_type = 'fence_vmware_rest'
       expect_commands([
                         %r{^pcs stonith delete --force vmfence$},
-                        %r{^pcs stonith create --force vmfence fence_vmware_rest}
+                        %r{^pcs stonith create --force vmfence fence_vmware_rest},
                       ])
       vmfence_instance.flush
     end
@@ -363,7 +363,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
       vmfence_instance.metadata = { 'target-role' => 'Started' }
       expect_commands([
                         %r{^pcs stonith delete --force vmfence$},
-                        %r{^pcs stonith create --force vmfence fence_vmware_soap ipaddr=.* op monitor interval=60s meta target-role=Started}
+                        %r{^pcs stonith create --force vmfence fence_vmware_soap ipaddr=.* op monitor interval=60s meta target-role=Started},
                       ])
       vmfence_instance.flush
     end
@@ -372,7 +372,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:pcs) do
       vmfence_instance.operations = [{ 'monitor' => { 'interval' => '20s' } }]
       expect_commands([
                         %r{^pcs stonith delete --force vmfence$},
-                        %r{^pcs stonith create --force vmfence fence_vmware_soap ipaddr=.* op monitor interval=20s$}
+                        %r{^pcs stonith create --force vmfence fence_vmware_soap ipaddr=.* op monitor interval=20s$},
                       ])
       vmfence_instance.flush
     end

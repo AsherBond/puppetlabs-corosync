@@ -64,7 +64,7 @@ Puppet::Type.type(:cs_order).provide(:crm, parent: PuppetX::Voxpupuli::Corosync:
         score: items['score'],
         kind: kind,
         symmetrical: symmetrical,
-        provider: name
+        provider: name,
       }
       instances << new(order_instance)
     end
@@ -82,7 +82,7 @@ Puppet::Type.type(:cs_order).provide(:crm, parent: PuppetX::Voxpupuli::Corosync:
       score: @resource[:score],
       symmetrical: @resource[:symmetrical],
       kind: @resource[:kind],
-      cib: @resource[:cib]
+      cib: @resource[:cib],
     }
   end
 

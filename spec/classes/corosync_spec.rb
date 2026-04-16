@@ -5,7 +5,7 @@ require 'spec_helper'
 describe 'corosync' do
   let :params do
     { set_votequorum: false,
-      multicast_address: '239.1.1.2' }
+      multicast_address: '239.1.1.2', }
   end
 
   shared_examples_for 'corosync' do
@@ -13,26 +13,26 @@ describe 'corosync' do
 
     it 'does manage the corosync service' do
       is_expected.to contain_service('corosync').with(
-        ensure: 'running'
+        ensure: 'running',
       )
     end
 
     it 'validates the corosync configuration' do
       is_expected.to contain_file('/etc/corosync/corosync.conf').with_validate_cmd(
-        '/usr/sbin/corosync -t -c %'
+        '/usr/sbin/corosync -t -c %',
       )
     end
 
     context 'validates the corosncy configuration when config_validate_cmd is set' do
       let(:params) do
         super().merge(
-          config_validate_cmd: '/usr/sbin/corosync -t -c'
+          config_validate_cmd: '/usr/sbin/corosync -t -c',
         )
       end
 
       it 'validates with test_corosync_config_cmd' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_validate_cmd(
-          '/usr/sbin/corosync -t -c'
+          '/usr/sbin/corosync -t -c',
         )
       end
     end
@@ -40,7 +40,7 @@ describe 'corosync' do
     context 'when manage_corosync_service is false' do
       let(:params) do
         super().merge(
-          manage_corosync_service: false
+          manage_corosync_service: false,
         )
       end
 
@@ -52,29 +52,29 @@ describe 'corosync' do
     context 'when set_votequorum is true' do
       let(:params) do
         super().merge(
-          set_votequorum: true
+          set_votequorum: true,
         )
       end
 
       context 'when quorum_members is an array with 2 items' do
         let(:params) do
           super().merge(
-            quorum_members: ['node1.test.org', 'node2.test.org']
+            quorum_members: ['node1.test.org', 'node2.test.org'],
           )
         end
 
         it 'configures votequorum' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1}
+            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2}
+            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
 
@@ -83,13 +83,13 @@ describe 'corosync' do
 
           it 'supports persistent node IDs' do
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{nodelist}
+              %r{nodelist},
             )
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: node1\.test\.org\n\s*nodeid: 3}
+              %r{ring0_addr: node1\.test\.org\n\s*nodeid: 3},
             )
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: node2\.test\.org\n\s*nodeid: 11}
+              %r{ring0_addr: node2\.test\.org\n\s*nodeid: 11},
             )
           end
         end
@@ -98,19 +98,19 @@ describe 'corosync' do
           let(:params) do
             super().merge(
               quorum_members: ['192.168.0.1', '192.168.0.2'],
-              quorum_members_names: ['node1.test.org', 'node2.test.org']
+              quorum_members_names: ['node1.test.org', 'node2.test.org'],
             )
           end
 
           it 'supports persistent node names' do
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{nodelist}
+              %r{nodelist},
             )
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: 192\.168\.0\.1\n\s*nodeid: 1\n\s*name: node1\.test\.org}
+              %r{ring0_addr: 192\.168\.0\.1\n\s*nodeid: 1\n\s*name: node1\.test\.org},
             )
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: 192\.168\.0\.2\n\s*nodeid: 2\n\s*name: node2\.test\.org}
+              %r{ring0_addr: 192\.168\.0\.2\n\s*nodeid: 2\n\s*name: node2\.test\.org},
             )
           end
         end
@@ -120,13 +120,13 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             quorum_members: ['node1.test.org', 'node2.test.org', 'node3.test.org'],
-            votequorum_expected_votes: 3
+            votequorum_expected_votes: 3,
           )
         end
 
         it 'does not configure two_nodes option' do
           is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
       end
@@ -134,13 +134,13 @@ describe 'corosync' do
       context 'when quorum_members is not set and votequorum_expected_votes is set' do
         let(:params) do
           super().merge(
-            votequorum_expected_votes: 2
+            votequorum_expected_votes: 2,
           )
         end
 
         it 'configures two_node' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
       end
@@ -149,22 +149,22 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             quorum_members: ['node1.test.org', 'node2.test.org'],
-            votequorum_expected_votes: 2
+            votequorum_expected_votes: 2,
           )
         end
 
         it 'configures nodelist' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1}
+            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2}
+            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
       end
@@ -176,22 +176,22 @@ describe 'corosync' do
               ['172.31.10.1', '172.31.11.1', '172.31.12.1'],
               ['172.31.10.2', '172.31.11.2', '172.31.12.2'],
               ['172.31.10.3', '172.31.11.3', '172.31.12.3'],
-              ['172.31.10.4', '172.31.11.4', '172.31.12.4']
-            ]
+              ['172.31.10.4', '172.31.11.4', '172.31.12.4'],
+            ],
           )
         end
 
         (1..4).each do |node_id|
           it "configures rings for host #{node_id} correctly" do
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: 172.31.10.#{node_id}\n\s*ring1_addr: 172.31.11.#{node_id}\n\s*ring2_addr: 172.31.12.#{node_id}\n\s*nodeid: #{node_id}}
+              %r{ring0_addr: 172.31.10.#{node_id}\n\s*ring1_addr: 172.31.11.#{node_id}\n\s*ring2_addr: 172.31.12.#{node_id}\n\s*nodeid: #{node_id}},
             )
           end
         end
 
         it 'does not configure two_nodes option' do
           is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
       end
@@ -201,22 +201,22 @@ describe 'corosync' do
           super().merge(
             quorum_members: [
               ['172.31.10.1', '172.31.11.1', '172.31.12.1'],
-              ['172.31.10.2', '172.31.11.2', '172.31.12.2']
-            ]
+              ['172.31.10.2', '172.31.11.2', '172.31.12.2'],
+            ],
           )
         end
 
         (1..2).each do |node_id|
           it "configures rings for host #{node_id} correctly" do
             is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-              %r{ring0_addr: 172.31.10.#{node_id}\n\s*ring1_addr: 172.31.11.#{node_id}\n\s*ring2_addr: 172.31.12.#{node_id}\n\s*nodeid: #{node_id}}
+              %r{ring0_addr: 172.31.10.#{node_id}\n\s*ring1_addr: 172.31.11.#{node_id}\n\s*ring2_addr: 172.31.12.#{node_id}\n\s*nodeid: #{node_id}},
             )
           end
         end
 
         it 'configures two_node' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
       end
@@ -226,7 +226,7 @@ describe 'corosync' do
       let(:params) do
         super().merge(
           multicast_address: :undef,
-          unicast_addresses: ['192.168.1.1', '192.168.1.2']
+          unicast_addresses: ['192.168.1.1', '192.168.1.2'],
         )
       end
 
@@ -234,35 +234,35 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             set_votequorum: true,
-            quorum_members: ['node1.test.org', 'node2.test.org']
+            quorum_members: ['node1.test.org', 'node2.test.org'],
           )
         end
 
         it 'configures votequorum' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1}
+            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 1},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2}
+            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 2},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{two_node: 1\n}
+            %r{two_node: 1\n},
           )
         end
 
         it 'supports persistent node IDs' do
           params[:quorum_members_ids] = [3, 11]
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 3}
+            %r{ring0_addr: node1\.test\.org\n\s*nodeid: 3},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 11}
+            %r{ring0_addr: node2\.test\.org\n\s*nodeid: 11},
           )
         end
 
@@ -270,13 +270,13 @@ describe 'corosync' do
           params[:quorum_members] = ['192.168.0.1', '192.168.0.2']
           params[:quorum_members_names] = ['node1.test.org', 'node2.test.org']
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: 192\.168\.0\.1\n\s*nodeid: 1\n\s*name: node1\.test\.org}
+            %r{ring0_addr: 192\.168\.0\.1\n\s*nodeid: 1\n\s*name: node1\.test\.org},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{ring0_addr: 192\.168\.0\.2\n\s*nodeid: 2\n\s*name: node2\.test\.org}
+            %r{ring0_addr: 192\.168\.0\.2\n\s*nodeid: 2\n\s*name: node2\.test\.org},
           )
         end
       end
@@ -285,13 +285,13 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             bind_address: '10.0.0.1',
-            unicast_addresses: ['10.0.0.1', '10.0.0.2']
+            unicast_addresses: ['10.0.0.1', '10.0.0.2'],
           )
         end
 
         it 'configures the ring properly' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{interface.*memberaddr: 10\.0\.0\.1.*memberaddr: 10\.0\.0\.2.*bindnetaddr: 10\.0\.0\.1.*ringnumber:\s+0}m
+            %r{interface.*memberaddr: 10\.0\.0\.1.*memberaddr: 10\.0\.0\.2.*bindnetaddr: 10\.0\.0\.1.*ringnumber:\s+0}m,
           )
         end
       end
@@ -303,18 +303,18 @@ describe 'corosync' do
             unicast_addresses: [
               [
                 '10.0.0.1',
-                '10.0.1.1'
+                '10.0.1.1',
               ], [
                 '10.0.0.2',
-                '10.0.1.2'
-              ]
-            ]
+                '10.0.1.2',
+              ],
+            ],
           )
         end
 
         it 'configures the rings properly' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{interface.*memberaddr: 10\.0\.0\.1.*memberaddr: 10\.0\.0\.2.*bindnetaddr: 10\.0\.0\.1.*ringnumber:\s+0.*interface.*memberaddr: 10\.0\.1\.1.*memberaddr: 10\.0\.1\.2.*bindnetaddr: 10\.0\.1\.1.*ringnumber:\s+1}m
+            %r{interface.*memberaddr: 10\.0\.0\.1.*memberaddr: 10\.0\.0\.2.*bindnetaddr: 10\.0\.0\.1.*ringnumber:\s+0.*interface.*memberaddr: 10\.0\.1\.1.*memberaddr: 10\.0\.1\.2.*bindnetaddr: 10\.0\.1\.1.*ringnumber:\s+1}m,
           )
         end
       end
@@ -323,7 +323,7 @@ describe 'corosync' do
     context 'when cluster_name is not set' do
       it do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{cluster_name:}
+          %r{cluster_name:},
         )
       end
     end
@@ -331,13 +331,13 @@ describe 'corosync' do
     context 'when cluster_name is set' do
       let(:params) do
         super().merge(
-          cluster_name: 'hacell'
+          cluster_name: 'hacell',
         )
       end
 
       it 'configures cluster_name' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{cluster_name:\s*hacell$}
+          %r{cluster_name:\s*hacell$},
         )
       end
     end
@@ -346,14 +346,14 @@ describe 'corosync' do
       let(:params) do
         super().merge(
           authkey_source: 'string',
-          authkey: 'bXlzZWNyZXRrZXkK' # 'mysecretkey' in base64
+          authkey: 'bXlzZWNyZXRrZXkK', # 'mysecretkey' in base64
         )
       end
 
       it 'deploys authkey file' do
         is_expected.to contain_file('/etc/corosync/authkey').with(
           content: "mysecretkey\n",
-          before: ['File[/etc/corosync/corosync.conf]']
+          before: ['File[/etc/corosync/corosync.conf]'],
         )
       end
     end
@@ -361,14 +361,14 @@ describe 'corosync' do
     context 'when authkey is a file' do
       let(:params) do
         super().merge(
-          authkey: '/etc/pki/tls/private/corosync.key'
+          authkey: '/etc/pki/tls/private/corosync.key',
         )
       end
 
       it 'deploys authkey file' do
         is_expected.to contain_file('/etc/corosync/authkey').with(
           source: '/etc/pki/tls/private/corosync.key',
-          before: ['File[/etc/corosync/corosync.conf]']
+          before: ['File[/etc/corosync/corosync.conf]'],
         )
       end
     end
@@ -376,14 +376,14 @@ describe 'corosync' do
     context 'when multicast_address, unicast_addresses and cluster_name are not set' do
       let(:params) do
         super().merge(
-          multicast_address: :undef
+          multicast_address: :undef,
         )
       end
 
       it 'raises error' do
         is_expected.to raise_error(
           Puppet::Error,
-          %r{You must provide a value for multicast_address, unicast_address or cluster_name\.}
+          %r{You must provide a value for multicast_address, unicast_address or cluster_name\.},
         )
       end
     end
@@ -392,16 +392,16 @@ describe 'corosync' do
       let(:params) do
         super().merge(
           multicast_address: :undef,
-          cluster_name: 'mycluster'
+          cluster_name: 'mycluster',
         )
       end
 
       it 'does not configure multicast' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{broadcast}
+          %r{broadcast},
         )
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{mcastaddr}
+          %r{mcastaddr},
         )
       end
     end
@@ -409,7 +409,7 @@ describe 'corosync' do
     context 'when log_timestamp is not set' do
       it 'does not set timestamp' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{timestamp}
+          %r{timestamp},
         )
       end
     end
@@ -417,13 +417,13 @@ describe 'corosync' do
     context 'when log_timestamp is false' do
       let(:params) do
         super().merge(
-          log_timestamp: false
+          log_timestamp: false,
         )
       end
 
       it 'does not set timestamp' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{timestamp}
+          %r{timestamp},
         )
       end
     end
@@ -431,13 +431,13 @@ describe 'corosync' do
     context 'when log_timestamp is set' do
       let(:params) do
         super().merge(
-          log_timestamp: true
+          log_timestamp: true,
         )
       end
 
       it 'does set timestamp' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{timestamp.*on}
+          %r{timestamp.*on},
         )
       end
     end
@@ -445,13 +445,13 @@ describe 'corosync' do
     context 'when log_file is not set' do
       it 'does set to_logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{to_logfile.*yes}
+          %r{to_logfile.*yes},
         )
       end
 
       it 'does not set logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{^\s*logfile}
+          %r{^\s*logfile},
         )
       end
     end
@@ -459,7 +459,7 @@ describe 'corosync' do
     context 'with undefined watchdog_device' do
       it 'does not configure watchdog_device resource' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{watchdog_device:}
+          %r{watchdog_device:},
         )
       end
     end
@@ -469,7 +469,7 @@ describe 'corosync' do
 
       it 'configures watchdog_device resource' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{watchdog_device: off}
+          %r{watchdog_device: off},
         )
       end
     end
@@ -478,19 +478,19 @@ describe 'corosync' do
       let(:params) do
         super().merge(
           log_file: true,
-          log_file_name: '/var/log/corosync/corosync.log'
+          log_file_name: '/var/log/corosync/corosync.log',
         )
       end
 
       it 'does set to_logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{to_logfile.*yes}
+          %r{to_logfile.*yes},
         )
       end
 
       it 'does set logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{logfile.*/var/log/corosync/corosync\.log}
+          %r{logfile.*/var/log/corosync/corosync\.log},
         )
       end
     end
@@ -498,19 +498,19 @@ describe 'corosync' do
     context 'when log_file is disabled' do
       let(:params) do
         super().merge(
-          log_file: false
+          log_file: false,
         )
       end
 
       it 'does not set to_logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{to_logfile.*no}
+          %r{to_logfile.*no},
         )
       end
 
       it 'does not set logfile' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-          %r{^\s*logfile}
+          %r{^\s*logfile},
         )
       end
     end
@@ -523,12 +523,12 @@ describe 'corosync' do
       'vsftype' => 'none',
       'token_retransmits_before_loss_const' => 10,
       'join' => 50,
-      'compatibility' => 'whitetank'
+      'compatibility' => 'whitetank',
     }.each do |optional_parameter, possible_value|
       context "when #{optional_parameter} is not set" do
         it 'is not in corosync.conf' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').without_content(
-            %r{#{optional_parameter}}
+            %r{#{optional_parameter}},
           )
         end
       end
@@ -536,13 +536,13 @@ describe 'corosync' do
       context "when #{optional_parameter} is set" do
         let(:params) do
           super().merge(
-            optional_parameter => possible_value
+            optional_parameter => possible_value,
           )
         end
 
         it 'is set in corosync.conf' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{#{optional_parameter}:\s*#{possible_value}\n}
+            %r{#{optional_parameter}:\s*#{possible_value}\n},
           )
         end
       end
@@ -554,7 +554,7 @@ describe 'corosync' do
 
         it "does install #{package}" do
           is_expected.to contain_package(package).with(
-            ensure: 'present'
+            ensure: 'present',
           )
         end
       end
@@ -563,13 +563,13 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             "package_#{package}" => true,
-            "ensure_#{package}" => '1.1.1'
+            "ensure_#{package}" => '1.1.1',
           )
         end
 
         it "does install #{package} with version 1.1.1" do
           is_expected.to contain_package(package).with(
-            ensure: '1.1.1'
+            ensure: '1.1.1',
           )
         end
       end
@@ -587,7 +587,7 @@ describe 'corosync' do
       let(:params) do
         super().merge(
           set_votequorum: true,
-          quorum_members: []
+          quorum_members: [],
         )
       end
 
@@ -595,13 +595,13 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             multicast_address: '10.0.0.1',
-            cluster_name: :undef
+            cluster_name: :undef,
           )
         end
 
         it 'does not contain nodelist' do
           is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
         end
       end
@@ -610,13 +610,13 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             multicast_address: [],
-            cluster_name: 'mycluster'
+            cluster_name: 'mycluster',
           )
         end
 
         it 'does not contain nodelist' do
           is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{nodelist}
+            %r{nodelist},
           )
         end
       end
@@ -625,14 +625,14 @@ describe 'corosync' do
         let(:params) do
           super().merge(
             multicast_address: [],
-            cluster_name: :undef
+            cluster_name: :undef,
           )
         end
 
         it 'raises error' do
           is_expected.to raise_error(
             Puppet::Error,
-            %r{set_votequorum is true, so you must set either quorum_members, or one of multicast_address or cluster_name.}
+            %r{set_votequorum is true, so you must set either quorum_members, or one of multicast_address or cluster_name.},
           )
         end
       end
@@ -641,13 +641,13 @@ describe 'corosync' do
     context 'when configuring defaults for logging' do
       it 'configures stderr, syslog priority, func names' do
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{to_stderr:       yes}
+          %r{to_stderr:       yes},
         )
         is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{syslog_priority: info}
+          %r{syslog_priority: info},
         )
         is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-          %r{function_name:   on}
+          %r{function_name:   on},
         )
       end
     end
@@ -686,14 +686,14 @@ describe 'corosync' do
 
       it 'has the correct pcs version' do
         is_expected.to contain_class('corosync').with(
-          'pcs_version' => corosync_stack(os_facts)[:pcs_version]
+          'pcs_version' => corosync_stack(os_facts)[:pcs_version],
         )
       end
 
       context 'without secauth' do
         let(:params) do
           super().merge(
-            enable_secauth: false
+            enable_secauth: false,
           )
         end
 
@@ -701,10 +701,10 @@ describe 'corosync' do
 
         it 'disables secauth with corsync 2.x syntax' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{crypto_hash:\s+none}
+            %r{crypto_hash:\s+none},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{crypto_cipher:\s+none}
+            %r{crypto_cipher:\s+none},
           )
         end
       end
@@ -712,7 +712,7 @@ describe 'corosync' do
       context 'with secauth' do
         let(:params) do
           super().merge(
-            enable_secauth: true
+            enable_secauth: true,
           )
         end
 
@@ -720,10 +720,10 @@ describe 'corosync' do
 
         it 'enables secauth with corsync 2.x syntax' do
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{crypto_hash:\s+sha1}
+            %r{crypto_hash:\s+sha1},
           )
           is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
-            %r{crypto_cipher:\s+aes256}
+            %r{crypto_cipher:\s+aes256},
           )
         end
       end
@@ -741,13 +741,13 @@ describe 'corosync' do
       it 'installs the provider package' do
         is_expected.to contain_package(provider_package).with(
           ensure: 'present',
-          install_options: nil
+          install_options: nil,
         )
       end
 
       it 'does manage the pacemaker service' do
         is_expected.to contain_service('pacemaker').with(
-          ensure: 'running'
+          ensure: 'running',
         )
       end
 
@@ -763,15 +763,15 @@ describe 'corosync' do
               quorum_members: [
                 'node1.test.org',
                 'node2.test.org',
-                'node3.test.org'
-              ]
+                'node3.test.org',
+              ],
             )
           end
           let(:node) { 'node1.test.org' }
 
           [
             [:sensitive_hacluster_password, %r{The hacluster password and hash must be provided to authorize nodes via pcsd}],
-            [:sensitive_hacluster_hash, %r{The hacluster password and hash must be provided to authorize nodes via pcsd}]
+            [:sensitive_hacluster_hash, %r{The hacluster password and hash must be provided to authorize nodes via pcsd}],
           ].each do |param, expected|
             context "without #{param}" do
               let(:params) do
@@ -797,7 +797,7 @@ describe 'corosync' do
             is_expected.to contain_user('hacluster').with(
               ensure: 'present',
               gid: 'haclient',
-              password: 'some-secret-hash'
+              password: 'some-secret-hash',
             )
           end
 
@@ -805,7 +805,7 @@ describe 'corosync' do
             let(:params) do
               super().merge(
                 sensitive_hacluster_password: RSpec::Puppet::RawString.new("Sensitive('some-secret-sauce')"),
-                sensitive_hacluster_hash: RSpec::Puppet::RawString.new("Sensitive('some-secret-hash')")
+                sensitive_hacluster_hash: RSpec::Puppet::RawString.new("Sensitive('some-secret-hash')"),
               )
             end
 
@@ -815,8 +815,8 @@ describe 'corosync' do
                 path: '/sbin:/bin:/usr/sbin:/usr/bin',
                 require: [
                   'Service[pcsd]',
-                  'User[hacluster]'
-                ]
+                  'User[hacluster]',
+                ],
               )
             end
           end
@@ -829,13 +829,13 @@ describe 'corosync' do
                 quorum_members: [
                   '192.168.0.10',
                   '192.168.0.12',
-                  '192.168.0.13'
+                  '192.168.0.13',
                 ],
                 quorum_members_names: [
                   'node1.test.org',
                   'node2.test.org',
-                  'node3.test.org'
-                ]
+                  'node3.test.org',
+                ],
               )
             end
 
@@ -848,8 +848,8 @@ describe 'corosync' do
                 unless: "grep -q '192.168.0.10' /var/lib/pcsd/known-hosts 2>/dev/null && grep -q '192.168.0.12' /var/lib/pcsd/known-hosts 2>/dev/null && grep -q '192.168.0.13' /var/lib/pcsd/known-hosts 2>/dev/null",
                 require: [
                   'Service[pcsd]',
-                  'User[hacluster]'
-                ]
+                  'User[hacluster]',
+                ],
               )
             end
 
@@ -860,12 +860,12 @@ describe 'corosync' do
                                  ip: '10.0.0.48',
                                  interfaces: {
                                    eth0: {
-                                     ip: '10.0.0.48'
+                                     ip: '10.0.0.48',
                                    },
                                    eth1: {
-                                     ip: '192.168.0.10'
-                                   }
-                                 }
+                                     ip: '192.168.0.10',
+                                   },
+                                 },
                                })
               end
 
@@ -890,13 +890,13 @@ describe 'corosync' do
               quorum_members: [
                 'node1.test.org',
                 'node2.test.org',
-                'node3.test.org'
+                'node3.test.org',
               ],
               cluster_name: 'cluster_test',
               manage_quorum_device: true,
               quorum_device_host: 'quorum1.test.org',
               quorum_device_algorithm: 'ffsplit',
-              sensitive_quorum_device_password: RSpec::Puppet::RawString.new("Sensitive('quorum-secret-password')")
+              sensitive_quorum_device_password: RSpec::Puppet::RawString.new("Sensitive('quorum-secret-password')"),
             )
           end
           let(:node) { 'node1.test.org' }
@@ -905,7 +905,7 @@ describe 'corosync' do
             [
               [:quorum_device_host, %r{The quorum device host must be specified!}],
               [:sensitive_quorum_device_password, %r{The password for the hacluster user on the quorum device node is mandatory!}],
-              [:cluster_name, %r{A cluster name must be specified when a quorm device is configured!}]
+              [:cluster_name, %r{A cluster name must be specified when a quorm device is configured!}],
             ].each do |param, expected|
               context "without #{param}" do
                 let(:params) do
@@ -922,14 +922,14 @@ describe 'corosync' do
           context 'and a cluster member is specified as the quorum device' do
             let(:params) do
               super().merge(
-                quorum_device_host: 'node3.test.org'
+                quorum_device_host: 'node3.test.org',
               )
             end
 
             it 'fails to deploy' do
               is_expected.to raise_error(
                 Puppet::Error,
-                %r{Quorum device host cannot also be a member of the cluster!}
+                %r{Quorum device host cannot also be a member of the cluster!},
               )
             end
           end
@@ -945,7 +945,7 @@ describe 'corosync' do
               is_expected.to contain_file('/etc/corosync/corosync.conf').with_content(
                 %r!quorum {
   provider: corosync_votequorum
-}$!m
+}$!m,
               )
             end
 
@@ -975,13 +975,13 @@ describe 'corosync' do
       host:      quorum1[.]test[.]org
     }
   }
-}!m
+}!m,
               )
             end
 
             it 'installs the quorum device package' do
               is_expected.to contain_package('corosync-qdevice').with(
-                ensure: 'present'
+                ensure: 'present',
               )
             end
 
@@ -990,7 +990,7 @@ describe 'corosync' do
                 ensure: 'running',
                 enable: 'true',
                 require: 'Package[corosync-qdevice]',
-                subscribe: 'Service[corosync]'
+                subscribe: 'Service[corosync]',
               )
             end
 
@@ -1003,7 +1003,7 @@ describe 'corosync' do
           context 'with all parameters' do
             it 'installs the quorum device package' do
               is_expected.to contain_package('corosync-qdevice').with(
-                ensure: 'present'
+                ensure: 'present',
               )
             end
 
@@ -1012,7 +1012,7 @@ describe 'corosync' do
                 ensure: 'running',
                 enable: 'true',
                 require: 'Package[corosync-qdevice]',
-                subscribe: 'Service[corosync]'
+                subscribe: 'Service[corosync]',
               )
             end
 
@@ -1023,7 +1023,7 @@ describe 'corosync' do
                   command: "pcs cluster setup --force #{cluster_name_arg} cluster_test node1.test.org node2.test.org node3.test.org",
                   path: '/sbin:/bin:/usr/sbin:/usr/bin',
                   onlyif: 'test ! -f /etc/corosync/corosync.conf',
-                  require: 'Exec[authorize_members]'
+                  require: 'Exec[authorize_members]',
                 )
               end
 
@@ -1035,17 +1035,17 @@ describe 'corosync' do
                   require: [
                     'Package[corosync-qdevice]',
                     'Exec[authorize_members]',
-                    'Exec[pcs_cluster_temporary]'
-                  ]
+                    'Exec[pcs_cluster_temporary]',
+                  ],
                 )
 
                 is_expected.to contain_exec('pcs_cluster_add_qdevice').with(
                   command: 'pcs quorum device add model net host=quorum1.test.org algorithm=ffsplit',
                   path: '/sbin:/bin:/usr/sbin:/usr/bin',
                   onlyif: [
-                    'test 0 -ne $(pcs quorum config | grep "host:" >/dev/null 2>&1; echo $?)'
+                    'test 0 -ne $(pcs quorum config | grep "host:" >/dev/null 2>&1; echo $?)',
                   ],
-                  require: 'Exec[authorize_qdevice]'
+                  require: 'Exec[authorize_qdevice]',
                 )
               end
 
@@ -1062,7 +1062,7 @@ describe 'corosync' do
       host:      quorum1[.]test[.]org
     }
   }
-}!m
+}!m,
                 )
               end
             end
@@ -1073,14 +1073,14 @@ describe 'corosync' do
               super().merge(
                 quorum_members: [
                   'node1.test.org',
-                  'node2.test.org'
-                ]
+                  'node2.test.org',
+                ],
               )
             end
 
             it 'does not configure two node' do
               is_expected.not_to contain_file('/etc/corosync/corosync.conf').with_content(
-                %r{two_node: 1\n}
+                %r{two_node: 1\n},
               )
             end
             # else - to implement

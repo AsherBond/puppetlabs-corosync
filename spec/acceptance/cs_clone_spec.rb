@@ -72,7 +72,7 @@ NWyN0RsTXFaqowV1/HSyvfD7LoF/CrmN5gOAM3Ierv/Ti9uqGVhdGBd/kw=='
 
   {
     group: 'duncan_group',
-    primitive: 'duncan_vip'
+    primitive: 'duncan_vip',
   }.each do |type, property_value|
     context "with #{type} #{property_value}" do
       it 'creates a clone' do

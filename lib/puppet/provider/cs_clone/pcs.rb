@@ -55,7 +55,7 @@ Puppet::Type.type(:cs_clone).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
         interleave:        items['interleave'],
         promotable:        items['promotable'],
         promoted_max:      items['promoted-max'],
-        promoted_node_max: items['promoted-node-max']
+        promoted_node_max: items['promoted-node-max'],
       }
 
       if e.elements['primitive']
@@ -91,7 +91,7 @@ Puppet::Type.type(:cs_clone).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
       interleave:        @resource[:interleave],
       promotable:        @resource[:promotable],
       promoted_max:      @resource[:promoted_max],
-      promoted_node_max: @resource[:promoted_node_max]
+      promoted_node_max: @resource[:promoted_node_max],
     }
   end
 
@@ -137,7 +137,7 @@ Puppet::Type.type(:cs_clone).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
       interleave: 'interleave',
       promotable: 'promotable',
       promoted_max: 'promoted-max',
-      promoted_node_max: 'promoted-node-max'
+      promoted_node_max: 'promoted-node-max',
     }.each do |property, clone_property|
       cmd << "#{clone_property}=#{@resource.should(property)}" unless @resource.should(property) == :absent
     end

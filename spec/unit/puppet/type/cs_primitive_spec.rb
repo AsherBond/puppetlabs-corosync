@@ -50,7 +50,7 @@ describe Puppet::Type.type(:cs_primitive) do
         expect do
           subject.new(
             name: 'mock_primitive',
-            parameters: 'fail'
+            parameters: 'fail',
           )
         end.to raise_error Puppet::Error, %r{hash}
       end
@@ -61,20 +61,20 @@ describe Puppet::Type.type(:cs_primitive) do
     it 'does not change arrays' do
       expect(subject.new(
         name: 'mock_primitive',
-        operations: [{ 'start' => { 'interval' => '10' } }, { 'stop' => { 'interval' => '10' } }]
+        operations: [{ 'start' => { 'interval' => '10' } }, { 'stop' => { 'interval' => '10' } }],
       ).should(:operations)).to eq([
                                      { 'start' => { 'interval' => '10' } },
-                                     { 'stop' => { 'interval' => '10' } }
+                                     { 'stop' => { 'interval' => '10' } },
                                    ])
     end
 
     it 'converts hashes into array' do
       expect(subject.new(
         name: 'mock_primitive',
-        operations: { 'start' => { 'interval' => '10' }, 'stop' => { 'interval' => '10' } }
+        operations: { 'start' => { 'interval' => '10' }, 'stop' => { 'interval' => '10' } },
       ).should(:operations)).to eq([
                                      { 'start' => { 'interval' => '10' } },
-                                     { 'stop' => { 'interval' => '10' } }
+                                     { 'stop' => { 'interval' => '10' } },
                                    ])
     end
 
@@ -82,10 +82,10 @@ describe Puppet::Type.type(:cs_primitive) do
       allow(Puppet).to receive(:deprecation_warning).once
       expect(subject.new(
         name: 'mock_primitive',
-        operations: { 'start' => { 'interval' => '10' }, 'stop:Master' => { 'interval' => '10' } }
+        operations: { 'start' => { 'interval' => '10' }, 'stop:Master' => { 'interval' => '10' } },
       ).should(:operations)).to eq([
                                      { 'start' => { 'interval' => '10' } },
-                                     { 'stop' => { 'interval' => '10', 'role' => 'Master' } }
+                                     { 'stop' => { 'interval' => '10', 'role' => 'Master' } },
                                    ])
     end
 
@@ -93,11 +93,11 @@ describe Puppet::Type.type(:cs_primitive) do
       allow(Puppet).to receive(:deprecation_warning).once
       expect(subject.new(
         name: 'mock_primitive',
-        operations: { 'start' => [{ 'interval' => '10' }, { 'interval' => '10', 'role' => 'foo' }], 'stop' => { 'interval' => '10' } }
+        operations: { 'start' => [{ 'interval' => '10' }, { 'interval' => '10', 'role' => 'foo' }], 'stop' => { 'interval' => '10' } },
       ).should(:operations)).to eq([
                                      { 'start' => { 'interval' => '10' } },
                                      { 'start' => { 'interval' => '10', 'role' => 'foo' } },
-                                     { 'stop' => { 'interval' => '10' } }
+                                     { 'stop' => { 'interval' => '10' } },
                                    ])
     end
 
@@ -105,11 +105,11 @@ describe Puppet::Type.type(:cs_primitive) do
       allow(Puppet).to receive(:deprecation_warning).twice
       expect(subject.new(
         name: 'mock_primitive',
-        operations: { 'start' => { 'interval' => '10' }, 'stop:Master' => [{ 'interval' => '10' }, { 'interval' => '20' }] }
+        operations: { 'start' => { 'interval' => '10' }, 'stop:Master' => [{ 'interval' => '10' }, { 'interval' => '20' }] },
       ).should(:operations)).to eq([
                                      { 'start' => { 'interval' => '10' } },
                                      { 'stop' => { 'interval' => '10', 'role' => 'Master' } },
-                                     { 'stop' => { 'interval' => '20', 'role' => 'Master' } }
+                                     { 'stop' => { 'interval' => '20', 'role' => 'Master' } },
                                    ])
     end
   end
@@ -121,44 +121,44 @@ describe Puppet::Type.type(:cs_primitive) do
 
     it 'shows 1 new op with 1 parameter' do
       expect(ops.change_to_s([], [{ 'start' => { 'interval' => '10' } }])).to eq(
-        '1 added: start (interval=10)'
+        '1 added: start (interval=10)',
       )
     end
 
     it 'shows 1 new op with 1 parameter and 1 kept' do
       common = [{ 'monitor' => { 'interval' => '10' } }]
       expect(ops.change_to_s(common, common + [{ 'start' => { 'interval' => '10' } }])).to eq(
-        '1 added: start (interval=10) / 1 kept'
+        '1 added: start (interval=10) / 1 kept',
       )
     end
 
     it 'shows 1 new op with 2 parameters' do
       expect(ops.change_to_s([], [{ 'start' => { 'interval' => '10', 'foo' => 'bar' } }])).to eq(
-        '1 added: start (interval=10 foo=bar)'
+        '1 added: start (interval=10 foo=bar)',
       )
     end
 
     it 'shows 2 new ops with 1 parameter' do
       expect(ops.change_to_s([], [{ 'start' => { 'interval' => '10' } }, { 'stop' => { 'interval' => '10' } }])).to eq(
-        '2 added: start (interval=10) stop (interval=10)'
+        '2 added: start (interval=10) stop (interval=10)',
       )
     end
 
     it 'shows 1 deleted op with 1 parameter' do
       expect(ops.change_to_s([{ 'start' => { 'interval' => '10' } }], [])).to eq(
-        '1 removed: start (interval=10)'
+        '1 removed: start (interval=10)',
       )
     end
 
     it 'shows 1 removed op with 2 parameters' do
       expect(ops.change_to_s([{ 'start' => { 'interval' => '10', 'foo' => 'bar' } }], [])).to eq(
-        '1 removed: start (interval=10 foo=bar)'
+        '1 removed: start (interval=10 foo=bar)',
       )
     end
 
     it 'shows 2 removed ops with 1 parameter' do
       expect(ops.change_to_s([{ 'start' => { 'interval' => '10' } }, { 'stop' => { 'interval' => '10' } }], [])).to eq(
-        '2 removed: start (interval=10) stop (interval=10)'
+        '2 removed: start (interval=10) stop (interval=10)',
       )
     end
   end

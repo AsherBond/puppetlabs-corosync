@@ -41,7 +41,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:crm) do
 
       allow(described_class).to receive(:block_until_ready).and_return(nil)
       allow(Puppet::Util::Execution).to receive(:execute).and_return(
-        Puppet::Util::Execution::ProcessOutput.new(test_cib, 0)
+        Puppet::Util::Execution::ProcessOutput.new(test_cib, 0),
       )
       described_class.instances
     end
@@ -105,7 +105,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:crm) do
         provider: :crm,
         primitive_class: 'ocf',
         provided_by: 'heartbeat',
-        primitive_type: 'IPaddr2'
+        primitive_type: 'IPaddr2',
       )
     end
 
@@ -126,7 +126,7 @@ describe Puppet::Type.type(:cs_primitive).provider(:crm) do
           expect(File.read(args[3])).to match(pattern) if args.slice(0..2) == %w[configure load update]
           true
         end.and_return(
-          Puppet::Util::Execution::ProcessOutput.new('', 0)
+          Puppet::Util::Execution::ProcessOutput.new('', 0),
         )
       end
     end

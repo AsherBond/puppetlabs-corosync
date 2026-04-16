@@ -899,6 +899,8 @@ Data type: `String`
 
 What command line utility provides corosync configuration capabilities.
 
+Default value: `'%{alias('corosync::provider')}'`
+
 ### <a name="corosync--reprobe"></a>`corosync::reprobe`
 
 Include this class to reprobe the corosync cluster when there are changes in

@@ -66,7 +66,7 @@ Puppet::Type.type(:cs_order).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
         kind: kind,
         symmetrical: symmetrical,
         provider: name,
-        new: false
+        new: false,
       }
       instances << new(order_instance)
     end
@@ -83,7 +83,7 @@ Puppet::Type.type(:cs_order).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
       second: @resource[:second],
       kind: @resource[:kind],
       symmetrical: @resource[:symmetrical],
-      new: true
+      new: true,
     }
   end
 

@@ -104,9 +104,9 @@ describe Puppet::Type.type(:cs_location).provider(:pcs) do
                                          'expression' => [
                                            { 'operation' => 'eq',
                                              'value' => 'c00n03',
-                                             'attribute' => '#uname' }
-                                         ]
-                                       }
+                                             'attribute' => '#uname', },
+                                         ],
+                                       },
                                      }])
       end
     end
@@ -117,7 +117,7 @@ describe Puppet::Type.type(:cs_location).provider(:pcs) do
           name: 'testlocation',
           provider: :pcs,
           primitive: 'apache',
-          score: 'INFINITY'
+          score: 'INFINITY',
         )
       end
 
@@ -134,13 +134,13 @@ describe Puppet::Type.type(:cs_location).provider(:pcs) do
             'expression' => [
               { 'operation' => 'eq',
                 'value' => 'c00n03',
-                'attribute' => '#uname' }
-            ]
-          }
+                'attribute' => '#uname', },
+            ],
+          },
         }]
         expect_commands([
                           %r{^pcs constraint remove testlocation$},
-                          %r{^pcs constraint location apache rule id=dont-run-apache-rule constraint-id=testlocation score=-INFINITY #uname eq c00n03$}
+                          %r{^pcs constraint location apache rule id=dont-run-apache-rule constraint-id=testlocation score=-INFINITY #uname eq c00n03$},
                         ])
         instance.flush
       end
@@ -152,23 +152,23 @@ describe Puppet::Type.type(:cs_location).provider(:pcs) do
             'expression' => [
               { 'operation' => 'lt',
                 'value' => 'container',
-                'attribute' => '#kind' }
-            ]
-          }
+                'attribute' => '#kind', },
+            ],
+          },
         }, {
           'dont-run-apache-rule' => {
             'score' => '-INFINITY',
             'expression' => [
               { 'operation' => 'eq',
                 'value' => 'c00n03',
-                'attribute' => '#uname' }
-            ]
-          }
-        }]
+                'attribute' => '#uname', },
+            ],
+          },
+        },]
         expect_commands([
                           %r{^pcs constraint remove testlocation$},
                           %r{^pcs constraint location apache rule id=dont-run-apache-rule-2 constraint-id=testlocation score=200 #kind lt container$},
-                          %r{^pcs constraint rule add testlocation id=dont-run-apache-rule score=-INFINITY #uname eq c00n03$}
+                          %r{^pcs constraint rule add testlocation id=dont-run-apache-rule score=-INFINITY #uname eq c00n03$},
                         ])
         instance.flush
       end

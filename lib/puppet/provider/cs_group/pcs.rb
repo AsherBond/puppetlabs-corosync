@@ -41,7 +41,7 @@ Puppet::Type.type(:cs_group).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
         ensure: :present,
         primitives: primitives,
         provider: name,
-        new: false
+        new: false,
       }
       instances << new(group_instance)
     end
@@ -55,7 +55,7 @@ Puppet::Type.type(:cs_group).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
       name: @resource[:name],
       ensure: :present,
       primitives: Array(@resource[:primitives]),
-      new: true
+      new: true,
     }
     @property_hash[:cib] = @resource[:cib] unless @resource[:cib].nil?
   end
@@ -94,7 +94,7 @@ Puppet::Type.type(:cs_group).provide(:pcs, parent: PuppetX::Voxpupuli::Corosync:
       self.class.run_command_in_cib([command(:pcs), 'resource', 'ungroup', @property_hash[:name]], @resource[:cib])
     end
 
-    cmd = [command(:pcs), 'resource', 'group', 'add', (@property_hash[:name]).to_s]
+    cmd = [command(:pcs), 'resource', 'group', 'add', @property_hash[:name].to_s]
     cmd += @property_hash[:primitives]
     self.class.run_command_in_cib(cmd, @resource[:cib])
   end

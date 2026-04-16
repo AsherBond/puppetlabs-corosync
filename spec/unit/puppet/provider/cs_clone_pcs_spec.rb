@@ -124,7 +124,7 @@ describe Puppet::Type.type(:cs_clone).provider(:pcs) do
         name: 'p_keystone-clone',
         primitive: 'p_keystone',
         provider: :pcs,
-        ensure: :present
+        ensure: :present,
       )
     end
 
@@ -243,10 +243,10 @@ describe Puppet::Type.type(:cs_clone).provider(:pcs) do
       it 'calls cibadmin with the correct parameters' do
         xpath = '/cib/configuration/resources/clone[descendant::primitive[@id=\'apache_service\']]'
         allow(Puppet::Util::Execution).to receive(:execute).with(['cibadmin', '--query', '--xpath', xpath], failonfail: true, combine: true).and_return(
-          Puppet::Util::Execution::ProcessOutput.new(clone_xml('apache_service-clone'), 0)
+          Puppet::Util::Execution::ProcessOutput.new(clone_xml('apache_service-clone'), 0),
         )
         allow(Puppet::Util::Execution).to receive(:execute).with(['cibadmin', '--replace', '--xpath', xpath, '--xml-text', clone_xml('apache_service-newclone').chomp], failonfail: true, combine: true).and_return(
-          Puppet::Util::Execution::ProcessOutput.new('', 0)
+          Puppet::Util::Execution::ProcessOutput.new('', 0),
         )
         instance.change_clone_id('primitive', 'apache_service', 'apache_service-newclone', nil)
       end
@@ -254,7 +254,7 @@ describe Puppet::Type.type(:cs_clone).provider(:pcs) do
       it 'calls cibadmin only when needed' do
         xpath = '/cib/configuration/resources/clone[descendant::primitive[@id=\'apache_service\']]'
         allow(Puppet::Util::Execution).to receive(:execute).with(['cibadmin', '--query', '--xpath', xpath], failonfail: true, combine: true).and_return(
-          Puppet::Util::Execution::ProcessOutput.new(clone_xml('apache_service-clone'), 0)
+          Puppet::Util::Execution::ProcessOutput.new(clone_xml('apache_service-clone'), 0),
         )
         instance.change_clone_id('primitive', 'apache_service', 'apache_service-clone', nil)
       end

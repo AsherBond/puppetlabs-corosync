@@ -38,7 +38,7 @@ Puppet::Type.type(:cs_group).provide(:crm, parent: PuppetX::Voxpupuli::Corosync:
         name: e.attributes['id'],
         ensure: :present,
         primitives: primitives,
-        provider: name
+        provider: name,
       }
       instances << new(group_instance)
     end
@@ -51,7 +51,7 @@ Puppet::Type.type(:cs_group).provide(:crm, parent: PuppetX::Voxpupuli::Corosync:
     @property_hash = {
       name: @resource[:name],
       ensure: :present,
-      primitives: Array(@resource[:primitives])
+      primitives: Array(@resource[:primitives]),
     }
     @property_hash[:cib] = @resource[:cib] unless @resource[:cib].nil?
   end

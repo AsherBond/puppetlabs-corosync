@@ -44,7 +44,7 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
       existing_primitive_type: e.attributes['type'],
       existing_provided_by: e.attributes['provider'],
       existing_metadata: nvpairs_to_hash(e.elements['meta_attributes']),
-      existing_operations: []
+      existing_operations: [],
     }
 
     operations = e.elements['operations']
@@ -102,7 +102,7 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
       primitive_class: @resource[:primitive_class],
       provided_by: @resource[:provided_by],
       primitive_type: @resource[:primitive_type],
-      existing_resource: :false
+      existing_resource: :false,
     }
     @property_hash[:parameters] = @resource[:parameters] unless @resource[:parameters].nil?
     @property_hash[:operations] = @resource[:operations] unless @resource[:operations].nil?
@@ -130,11 +130,11 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
   def _flush_stonith(operations, parameters, metadatas)
     pcs_subcommand = self.class._determine_primitive_subcommand(@property_hash[:primitive_class])
 
-    resource_type = (@property_hash[:primitive_type]).to_s
+    resource_type = @property_hash[:primitive_type].to_s
 
     # We destroy the resource if it's type, operations, or metadata has changed
     if @property_hash[:existing_resource] == :true
-      existing_resource_type = (@property_hash[:existing_primitive_type]).to_s
+      existing_resource_type = @property_hash[:existing_primitive_type].to_s
       meta = @property_hash[:metadata]
       e_meta = @property_hash[:existing_metadata]
       ops = @property_hash[:operations]
@@ -153,19 +153,19 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
 
       if force_reinstall == :true
         debug('Removing stonith')
-        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'delete', '--force', (@property_hash[:name]).to_s], @resource[:cib])
+        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'delete', '--force', @property_hash[:name].to_s], @resource[:cib])
       end
     end
 
     if @property_hash[:existing_resource] == :false || force_reinstall == :true
-      cmd = [command(:pcs), pcs_subcommand, 'create', '--force', (@property_hash[:name]).to_s]
+      cmd = [command(:pcs), pcs_subcommand, 'create', '--force', @property_hash[:name].to_s]
       cmd << resource_type
       cmd += parameters unless parameters.nil?
       cmd += operations unless operations.nil?
       cmd += metadatas unless metadatas.nil?
       self.class.run_command_in_cib(cmd, @resource[:cib])
     else
-      cmd = [command(:pcs), pcs_subcommand, 'update', (@property_hash[:name]).to_s]
+      cmd = [command(:pcs), pcs_subcommand, 'update', @property_hash[:name].to_s]
       # Only update if parameters are present
       unless parameters.nil?
         cmd += parameters
@@ -183,24 +183,24 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
     # command they do not include a provider or class in their type name
     resource_type = "#{@property_hash[:primitive_class]}:"
     resource_type << "#{@property_hash[:provided_by]}:" if @property_hash[:provided_by]
-    resource_type << (@property_hash[:primitive_type]).to_s
+    resource_type << @property_hash[:primitive_type].to_s
 
     # We destroy the resource if it's type, class or provider has changed
     unless @property_hash[:existing_resource] == :false
       existing_resource_type = "#{@property_hash[:existing_primitive_class]}:"
       existing_resource_type << "#{@property_hash[:existing_provided_by]}:" if @property_hash[:existing_provided_by]
-      existing_resource_type << (@property_hash[:existing_primitive_type]).to_s
+      existing_resource_type << @property_hash[:existing_primitive_type].to_s
 
       if existing_resource_type != resource_type
         debug('Removing primitive')
-        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'unclone', (@property_hash[:name]).to_s], @resource[:cib], false)
-        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'delete', '--force', (@property_hash[:name]).to_s], @resource[:cib])
+        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'unclone', @property_hash[:name].to_s], @resource[:cib], false)
+        self.class.run_command_in_cib([command(:pcs), pcs_subcommand, 'delete', '--force', @property_hash[:name].to_s], @resource[:cib])
         force_reinstall = :true
       end
     end
 
     if @property_hash[:existing_resource] == :false || force_reinstall == :true
-      cmd = [command(:pcs), pcs_subcommand, 'create', '--force', '--no-default-ops', (@property_hash[:name]).to_s]
+      cmd = [command(:pcs), pcs_subcommand, 'create', '--force', '--no-default-ops', @property_hash[:name].to_s]
       cmd << resource_type
       cmd += parameters unless parameters.nil?
       cmd += operations unless operations.nil?
@@ -213,14 +213,14 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
       self.class.run_command_in_cib(cmd, @resource[:cib], false)
     else
       @property_hash[:existing_operations].reject { |op| @property_hash[:operations].include?(op) }.each do |o|
-        cmd = [command(:pcs), pcs_subcommand, 'op', 'remove', (@property_hash[:name]).to_s]
+        cmd = [command(:pcs), pcs_subcommand, 'op', 'remove', @property_hash[:name].to_s]
         cmd << o.keys.first.to_s
         o.values.first.each_pair do |k, v|
           cmd << "#{k}=#{v}"
         end
         self.class.run_command_in_cib(cmd, @resource[:cib])
       end
-      cmd = [command(:pcs), pcs_subcommand, 'update', (@property_hash[:name]).to_s]
+      cmd = [command(:pcs), pcs_subcommand, 'update', @property_hash[:name].to_s]
       cmd += parameters unless parameters.nil?
       cmd += operations unless operations.nil?
       cmd += utilization unless utilization.nil?
@@ -288,7 +288,7 @@ Puppet::Type.type(:cs_primitive).provide(:pcs, parent: PuppetX::Voxpupuli::Coros
     # Establish whether this is a regular resource or a special stonith resource
     # The destinction exists only because pcs uses a different subcommand to
     # interact with stonith resources
-    is_stonith = (@property_hash[:primitive_class]).to_s == 'stonith'
+    is_stonith = @property_hash[:primitive_class].to_s == 'stonith'
 
     # Call the appropriate helper function to generate the PCS commands
     if is_stonith

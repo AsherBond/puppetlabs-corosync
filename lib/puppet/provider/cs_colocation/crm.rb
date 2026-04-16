@@ -63,7 +63,7 @@ Puppet::Type.type(:cs_colocation).provide(:crm, parent: PuppetX::Voxpupuli::Coro
           rsetitems = rset.attributes
 
           # If the resource set has a role, it will apply to all referenced resources.
-          rsetrole = (rsetitems['role'])
+          rsetrole = rsetitems['role']
 
           # Add all referenced resources to the primitives array.
           rset.each_element('resource_ref') do |rref|
@@ -86,7 +86,7 @@ Puppet::Type.type(:cs_colocation).provide(:crm, parent: PuppetX::Voxpupuli::Coro
         ensure: :present,
         primitives: primitives,
         score: items['score'],
-        provider: name
+        provider: name,
       }
       instances << new(colocation_instance)
     end
@@ -101,7 +101,7 @@ Puppet::Type.type(:cs_colocation).provide(:crm, parent: PuppetX::Voxpupuli::Coro
       ensure: :present,
       primitives: @resource[:primitives],
       score: @resource[:score],
-      cib: @resource[:cib]
+      cib: @resource[:cib],
     }
   end
 

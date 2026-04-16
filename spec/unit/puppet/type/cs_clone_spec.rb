@@ -48,15 +48,15 @@ describe Puppet::Type.type(:cs_clone) do
           expect(subject.new(
             name: 'mock_clone',
             primitive: 'mock_primitive',
-            attribute => value
+            attribute => value,
           )[attribute]).to eq(value.to_s.to_sym)
         end
       end
 
       it "validates that the #{attribute} attribute cannot be other values" do
         ['fail', 42].each do |value|
-          expect { subject.new(name: 'mock_clone', attribute => value) }. \
-            to raise_error Puppet::Error, %r{(true|false)}
+          expect { subject.new(name: 'mock_clone', attribute => value) } \
+            .to raise_error Puppet::Error, %r{(true|false)}
         end
       end
     end

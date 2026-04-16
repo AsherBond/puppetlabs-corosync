@@ -48,7 +48,7 @@ Puppet::Type.type(:cs_location).provide(:pcs, parent: PuppetX::Voxpupuli::Corosy
         score: items['score'] || 'INFINITY',
         rules: items['rule'],
         resource_discovery: items['resource-discovery'],
-        provider: name
+        provider: name,
       }
       instances << new(location_instance)
     end
@@ -65,7 +65,7 @@ Puppet::Type.type(:cs_location).provide(:pcs, parent: PuppetX::Voxpupuli::Corosy
       node_name: @resource[:node_name],
       score: @resource[:score],
       rules: @resource[:rules],
-      resource_discovery: @resource[:resource_discovery]
+      resource_discovery: @resource[:resource_discovery],
     }
   end
 
@@ -113,7 +113,7 @@ Puppet::Type.type(:cs_location).provide(:pcs, parent: PuppetX::Voxpupuli::Corosy
       params += expression
       cmd_rule = if count.zero?
                    [command(:pcs), 'constraint', 'location', @resource[:primitive],
-                    'rule'] + params
+                    'rule',] + params
                  else
                    [command(:pcs), 'constraint', 'rule', 'add', @resource[:name]] + params
                  end

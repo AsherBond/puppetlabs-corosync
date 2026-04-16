@@ -23,7 +23,7 @@ describe Puppet::Type.type(:cs_order).provider(:crm) do
 
   let :instances do
     allow(Puppet::Util::Execution).to receive(:execute).and_return(
-      Puppet::Util::Execution::ProcessOutput.new(test_cib, 0)
+      Puppet::Util::Execution::ProcessOutput.new(test_cib, 0),
     )
     described_class.instances
   end
